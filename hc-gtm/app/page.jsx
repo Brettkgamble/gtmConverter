@@ -1,5 +1,3 @@
-
-// import { FetchGtm } from '../components/functions/FetchGtm';
 import tagFile from '../public/files/GTM-P3NVH2_workspace.json';
 
 function  dataLoop() {
@@ -13,7 +11,6 @@ function  dataLoop() {
     let result = []
 
     Object.entries(tagFile).forEach((entry) => {
-
         const  [key, value ] = entry;
         Object.entries(value).forEach((entry2)=> {
             const [key2, value2] = entry2;
@@ -58,14 +55,37 @@ function  dataLoop() {
         })
 
     })
-    console.log(result)
+    return result
+}
+
+function GtmToCSV(gtmdata) {
+    // const data = gtmdata.map(row=> ({
+    //    tagType: row.tagType,
+    //    tagName: row.name,
+    //    tagId: row.tagId,
+    //    type: row.type,
+    // }))
+    Object.entries(gtmdata).forEach((entry) => {
+        const [key, value] = entry;
+        console.log('Value', value)
+        console.log('value', value.tagType)
+        console.log('name', value.name)
+        console.log('tagId', value.tagId)
+        console.log('type', value.type)
+        console.log('plength', value.paramsArray.length)
+        for (var i =0; i < value.paramsArray.length; i++) {
+            console.log(value.paramsArray[i].parameterType)
+            console.log(value.paramsArray[i].pkey)
+        }
+
+    })
+    // console.log(data)
 }
 
 export default function Home() {
-  // console.log('Tagfile', tagFile.containerVersion.path)
-  //   console.log('Tagfile', tagFile.containerVersion.tag[0])
     const test =  dataLoop();
-
+    // console.log(test)
+    GtmToCSV(test)
   return (
       <div>
           Hello world
