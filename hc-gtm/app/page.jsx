@@ -1,4 +1,10 @@
 import tagFile from '../public/files/GTM-P3NVH2_workspace.json';
+const fs = require('fs');
+
+async function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 
 function  dataLoop() {
     let  name='';
@@ -58,28 +64,47 @@ function  dataLoop() {
     return result
 }
 
-function GtmToCSV(gtmdata) {
-    // const data = gtmdata.map(row=> ({
-    //    tagType: row.tagType,
-    //    tagName: row.name,
-    //    tagId: row.tagId,
-    //    type: row.type,
-    // }))
+function appendtoFile(value) {
+    fs.appendFile('test.csv',
+        value ,
+        function(err){
+            if (err) throw err;
+        }
+    )
+}
+
+async function GtmToCSV(gtmdata) {
+
     Object.entries(gtmdata).forEach((entry) => {
+        let  tempArray=[];
         const [key, value] = entry;
-        console.log('Value', value)
-        console.log('value', value.tagType)
-        console.log('name', value.name)
-        console.log('tagId', value.tagId)
-        console.log('type', value.type)
-        console.log('plength', value.paramsArray.length)
-        for (var i =0; i < value.paramsArray.length; i++) {
-            console.log(value.paramsArray[i].parameterType)
-            console.log(value.paramsArray[i].pkey)
+        tempArray.push(value.tagType);
+        tempArray.push(value.name);
+        tempArray.push(value.tagId);
+        tempArray.push(value.type);
+
+        for (var i = 0; i < value.paramsArray.length; i++) {
+            let pos1 = value.paramsArray[i].parameterType
+            let pos2 = value.paramsArray[i].pkey
+            tempArray.push(pos1)
+            tempArray.push(pos2)
         }
 
+        tempArray.push(`\r\n`);
+
+         // console.log('Array', tempArray)
+        let text  = ''
+        for (var i = 0; i < tempArray.length; i++)  {
+            if (tempArray[i] != '\r\n') {
+                text = text + tempArray[i] + ','
+            } else {
+                text = text + tempArray[i]
+            }
+        }
+        // test 2
+        setTimeout(appendtoFile, 500, text)
     })
-    // console.log(data)
+    console.log('Complete6')
 }
 
 export default function Home() {
